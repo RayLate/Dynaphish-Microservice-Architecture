@@ -1,0 +1,46 @@
+version: '3'
+services:
+  redis:
+    image: redis:4.0.6-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/redis
+
+  flask-app:
+    image: dynaphish_queue
+    container_name: flask-app
+    build: app
+    restart: always
+    ports:
+      - '8000:5000'
+    volumes:
+      - ./app:/app
+
+  worker1:
+    image: dynaphish_queue:latest
+    restart: always
+    depends_on:
+      - redis
+    command: rq worker has-logo-queue  --url redis://redis:6379
+    links:
+      - redis
+
+  worker2:
+    image: dynaphish_queue:latest
+    restart: always
+    depends_on:
+      - redis
+    command: rq worker knowledge-expansion-queue  --url redis://redis:6379
+    links:
+      - redis
+
+  worker3:
+    image: dynaphish_queue:latest
+    restart: always
+    depends_on:
+      - redis
+    command: rq worker phishintention-queue --url redis://redis:6379
+    links:
+      - redis

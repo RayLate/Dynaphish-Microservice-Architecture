@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  # Build the app services
+  app:
+    build: app
+    restart: always
+    # replace <LOCATION_ON_DRIVE> with the absolute path to the folder below
+    volumes:
+      - <LOCATION_ON_DRIVE>\field_study_logo2brand:/field_study_logo2brand
+      - <LOCATION_ON_DRIVE>\data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+
+  nginx:
+    build: loadbalancer
+    restart: always
+    ports:
+      - 8030:80
+    # Make app as nginx dependency service
+    depends_on:
+      - app

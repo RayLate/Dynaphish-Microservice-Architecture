@@ -1,0 +1,98 @@
+version: '2'
+
+services:
+    haproxy:
+        image: haproxy:1.7
+        restart: always
+        ports:
+            # stats
+            - "8036:8036"
+
+            # splash
+            - "8050:8050"
+        links:
+            - splash0
+            - splash1
+            - splash2
+            - splash3
+            - splash4
+        volumes:
+            - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+    splash0:
+        image: scrapinghub/splash:3.5
+        command: --max-timeout 60 --slots 5 --maxrss 2500 --verbosity 1 --filters-path=/etc/splash/filters
+        expose:
+            - 8050
+        mem_limit: 1g
+        memswap_limit: 1.5g
+        restart: always
+        links:
+            - tor
+        volumes:
+            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
+            - ./filters/test:/etc/splash/filters:ro
+
+    splash1:
+        image: scrapinghub/splash:3.5
+        command: --max-timeout 60 --slots 5 --maxrss 2500 --verbosity 1 --filters-path=/etc/splash/filters
+        expose:
+            - 8050
+        mem_limit: 1g
+        memswap_limit: 1.5g
+        restart: always
+        links:
+            - tor
+        volumes:
+            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
+            - ./filters/test:/etc/splash/filters:ro
+
+    splash2:
+        image: scrapinghub/splash:3.5
+        command: --max-timeout 60 --slots 5 --maxrss 2500 --verbosity 1 --filters-path=/etc/splash/filters
+        expose:
+            - 8050
+        mem_limit: 1g
+        memswap_limit: 1.5g
+        restart: always
+        links:
+            - tor
+        volumes:
+            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
+            - ./filters/test:/etc/splash/filters:ro
+
+    splash3:
+        image: scrapinghub/splash:3.5
+        command: --max-timeout 60 --slots 5 --maxrss 2500 --verbosity 1 --filters-path=/etc/splash/filters
+        expose:
+            - 8050
+        mem_limit: 1g
+        memswap_limit: 1.5g
+        restart: always
+        links:
+            - tor
+        volumes:
+            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
+            - ./filters/test:/etc/splash/filters:ro
+
+    splash4:
+        image: scrapinghub/splash:3.5
+        command: --max-timeout 60 --slots 5 --maxrss 2500 --verbosity 1 --filters-path=/etc/splash/filters
+        expose:
+            - 8050
+        mem_limit: 1g
+        memswap_limit: 1.5g
+        restart: always
+        links:
+            - tor
+        volumes:
+            - ./proxy-profiles:/etc/splash/proxy-profiles:ro
+            - ./filters/test:/etc/splash/filters:ro
+
+    tor:
+        image: jess/tor-proxy
+        expose:
+            - 9050
+        logging:
+            driver: "none"
+        restart: always
